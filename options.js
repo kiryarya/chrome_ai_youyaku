@@ -42,7 +42,7 @@ const STRINGS = {
     slotNameLabel: "Name",
     slotNamePlaceholder: "Example: Quick summary",
     slotPromptLabel: "Prompt",
-    promptPlaceholder: "Prompt template...",
+    promptPlaceholder: "Prompt template... (placeholders: {url}, {title}, {selection})",
     slotServiceLabel: "Service",
     slotWidthLabel: "Width (0.2-0.8)",
     slotHeightLabel: "Height (0.5-1.0)",
@@ -88,7 +88,7 @@ const STRINGS = {
     slotNameLabel: "名称",
     slotNamePlaceholder: "例: クイック要約",
     slotPromptLabel: "プロンプト",
-    promptPlaceholder: "プロンプトテンプレート...",
+    promptPlaceholder: "プロンプトテンプレート...（利用可能なプレースホルダー: {url}, {title}, {selection}）",
     slotServiceLabel: "サービス",
     slotWidthLabel: "幅 (0.2-0.8)",
     slotHeightLabel: "高さ (0.5-1.0)",
@@ -122,7 +122,7 @@ const LANGUAGE_DEFAULT_SLOTS = {
   en: [
     {
       name: "Kid-friendly summary (JA)",
-      template: "Summarize this page in Japanese for a grade-school student. Provide five bullet points.\nURL: {url}\nTitle: {title}",
+      template: "Summarize this page in Japanese for a grade-school student. Provide five bullet points.\n\nSelected text:\n{selection}\nURL: {url}\nTitle: {title}",
       widthRatio: 0.33,
       heightRatio: 0.95,
       position: "right",
@@ -131,7 +131,7 @@ const LANGUAGE_DEFAULT_SLOTS = {
     },
     {
       name: "Key points + conclusion (JA)",
-      template: "Summarize the web page in Japanese in three key points followed by a short conclusion.\nURL: {url}\nTitle: {title}",
+      template: "Summarize the web page in Japanese in three key points followed by a short conclusion.\n\nSelected text:\n{selection}\nURL: {url}\nTitle: {title}",
       widthRatio: 0.33,
       heightRatio: 0.95,
       position: "right",
@@ -140,7 +140,7 @@ const LANGUAGE_DEFAULT_SLOTS = {
     },
     {
       name: "English summary (5 bullets)",
-      template: "Summarize the page in English using five concise bullet points.\nURL: {url}\nTitle: {title}",
+      template: "Summarize the page in English using five concise bullet points.\n\nSelected text:\n{selection}\nURL: {url}\nTitle: {title}",
       widthRatio: 0.33,
       heightRatio: 0.95,
       position: "right",
@@ -151,7 +151,7 @@ const LANGUAGE_DEFAULT_SLOTS = {
   ja: [
     {
       name: "小学生向け要約",
-      template: "このページを小学生向けにわかりやすくまとめてください。重要なポイントを5つの箇条書きで提示してください。\nURL: {url}\nタイトル: {title}",
+      template: "このページを小学生向けにわかりやすくまとめてください。重要なポイントを5つの箇条書きで提示してください。\n\n選択中のテキスト:\n{selection}\nURL: {url}\nタイトル: {title}",
       widthRatio: 0.33,
       heightRatio: 0.95,
       position: "right",
@@ -160,7 +160,7 @@ const LANGUAGE_DEFAULT_SLOTS = {
     },
     {
       name: "要点3つ＋結論",
-      template: "Webページの内容を重要な要点3つと簡潔な結論でまとめてください。\nURL: {url}\nタイトル: {title}",
+      template: "Webページの内容を重要な要点3つと簡潔な結論でまとめてください。\n\n選択中のテキスト:\n{selection}\nURL: {url}\nタイトル: {title}",
       widthRatio: 0.33,
       heightRatio: 0.95,
       position: "right",
@@ -169,7 +169,7 @@ const LANGUAGE_DEFAULT_SLOTS = {
     },
     {
       name: "英語要約（5つの箇条書き）",
-      template: "Summarize the page in English using five concise bullet points.\nURL: {url}\nTitle: {title}",
+      template: "Summarize the page in English using five concise bullet points.\n\n選択中のテキスト:\n{selection}\nURL: {url}\nTitle: {title}",
       widthRatio: 0.33,
       heightRatio: 0.95,
       position: "right",

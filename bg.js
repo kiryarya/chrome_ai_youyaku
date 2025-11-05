@@ -58,7 +58,7 @@ const LANGUAGE_DEFAULT_SLOTS = {
     {
       name: "Kid-friendly summary (JA)",
       template:
-        "Summarize this page in Japanese for a grade-school student. Provide five bullet points.\nURL: {url}\nTitle: {title}",
+        "Summarize this page in Japanese for a grade-school student. Provide five bullet points.\n\nSelected text:\n{selection}\nURL: {url}\nTitle: {title}",
       widthRatio: 0.33,
       heightRatio: 0.95,
       position: "right",
@@ -68,7 +68,7 @@ const LANGUAGE_DEFAULT_SLOTS = {
     {
       name: "Key points + conclusion (JA)",
       template:
-        "Summarize the web page in Japanese in three key points followed by a short conclusion.\nURL: {url}\nTitle: {title}",
+        "Summarize the web page in Japanese in three key points followed by a short conclusion.\n\nSelected text:\n{selection}\nURL: {url}\nTitle: {title}",
       widthRatio: 0.33,
       heightRatio: 0.95,
       position: "right",
@@ -78,7 +78,7 @@ const LANGUAGE_DEFAULT_SLOTS = {
     {
       name: "English summary (5 bullets)",
       template:
-        "Summarize the page in English using five concise bullet points.\nURL: {url}\nTitle: {title}",
+        "Summarize the page in English using five concise bullet points.\n\nSelected text:\n{selection}\nURL: {url}\nTitle: {title}",
       widthRatio: 0.33,
       heightRatio: 0.95,
       position: "right",
@@ -90,7 +90,7 @@ const LANGUAGE_DEFAULT_SLOTS = {
     {
       name: "小学生向け要約",
       template:
-        "このページを小学生向けにわかりやすくまとめてください。重要なポイントを5つの箇条書きで提示してください。\nURL: {url}\nタイトル: {title}",
+        "このページを小学生向けにわかりやすくまとめてください。重要なポイントを5つの箇条書きで提示してください。\n\n選択中のテキスト:\n{selection}\nURL: {url}\nタイトル: {title}",
       widthRatio: 0.33,
       heightRatio: 0.95,
       position: "right",
@@ -100,7 +100,7 @@ const LANGUAGE_DEFAULT_SLOTS = {
     {
       name: "要点3つ＋結論",
       template:
-        "Webページの内容を重要な要点3つと簡潔な結論でまとめてください。\nURL: {url}\nタイトル: {title}",
+        "Webページの内容を重要な要点3つと簡潔な結論でまとめてください。\n\n選択中のテキスト:\n{selection}\nURL: {url}\nタイトル: {title}",
       widthRatio: 0.33,
       heightRatio: 0.95,
       position: "right",
@@ -110,7 +110,7 @@ const LANGUAGE_DEFAULT_SLOTS = {
     {
       name: "英語要約（5つの箇条書き）",
       template:
-        "Summarize the page in English using five concise bullet points.\nURL: {url}\nTitle: {title}",
+        "Summarize the page in English using five concise bullet points.\n\n選択中のテキスト:\n{selection}\nURL: {url}\nTitle: {title}",
       widthRatio: 0.33,
       heightRatio: 0.95,
       position: "right",
@@ -135,8 +135,12 @@ function cloneSlots(list) {
   return list.map((slot) => ({ ...slot }));
 }
 
-function buildPrompt(template, { url, title }) {
-  return String(template || "").replaceAll("{url}", url).replaceAll("{title}", title);
+function buildPrompt(template, { url, title, selection }) {
+  const safeSelection = String(selection ?? "");
+  return String(template || "")
+    .replaceAll("{url}", url)
+    .replaceAll("{title}", title)
+    .replaceAll("{selection}", safeSelection);
 }
 
 function sanitizeService(id) {
@@ -194,6 +198,21 @@ function sanitizeSlots(slots, language = DEFAULT_SETTINGS.language) {
 }
 
 
+async function getSelectionFromTab(tabId) {
+  if (typeof tabId !== "number") return "";
+  try {
+    const [result] = await chrome.scripting.executeScript({
+      target: { tabId },
+      func: () => window.getSelection?.().toString() || ""
+    });
+    const value = result?.result;
+    return typeof value === "string" ? value : "";
+  } catch {
+    return "";
+  }
+}
+
+
 // ====== Storage accessors ======
 async function getSlots() {
   const { slots, settings } = await chrome.storage.sync.get(["slots", "settings"]);
@@ -213,7 +232,7 @@ async function getHotkeyMap() {
 
 
 // ====== Core runner ======
-async function runSlot(index) {
+async function runSlot(index, selectionText = "") {
   const slots = await getSlots();
   if (!slots.length) return;
   const slot = slots[index] ?? slots[0];
@@ -225,7 +244,12 @@ async function runSlot(index) {
   const fallbackTitle = FALLBACK_TITLES[settings.language] ?? FALLBACK_TITLES.en;
   const title = tab?.title || fallbackTitle;
 
-  const prompt = buildPrompt(slot.template, { url: here, title });
+  let selection = typeof selectionText === "string" ? selectionText : "";
+  if (!selection && typeof tab?.id === "number") {
+    selection = await getSelectionFromTab(tab.id);
+  }
+
+  const prompt = buildPrompt(slot.template, { url: here, title, selection });
   const serviceId = sanitizeService(slot.service);
   const service = SERVICE_DEFINITIONS[serviceId] ?? SERVICE_DEFINITIONS[DEFAULT_SERVICE];
   const chatUrl = service.buildUrl(prompt, { temporary: Boolean(slot.temporary) });
@@ -288,7 +312,8 @@ chrome.storage.onChanged.addListener((changes) => {
 chrome.contextMenus.onClicked.addListener(async (info) => {
   if (!info.menuItemId?.startsWith("slot_")) return;
   const idx = Number(info.menuItemId.split("_")[1]);
-  await runSlot(idx);
+  const selected = typeof info.selectionText === "string" ? info.selectionText : "";
+  await runSlot(idx, selected);
 });
 
 
