@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>GPT Side Runner</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f4f5fb;
+  --text: #20243a;
+  --muted: #5a6275;
+  --button-bg: linear-gradient(130deg, #4b6cb7, #182848);
+  --button-color: #ffffff;
+  --button-hover: linear-gradient(130deg, #3f5c9c, #121c2f);
+}
+
+body[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #101425;
+  --text: #f1f4ff;
+  --muted: #a2abc6;
+  --button-bg: linear-gradient(130deg, #6d8dff, #344a9a);
+  --button-color: #0b0f1d;
+  --button-hover: linear-gradient(130deg, #7b9aff, #3d56ac);
+}
+
+body {
+  margin: 0;
+  padding: 18px 18px 20px;
+  min-width: 240px;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+h1 {
+  font-size: 16px;
+  margin: 0 0 10px;
+}
+
+p {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+button {
+  width: 100%;
+  padding: 10px 12px;
+  font: inherit;
+  border-radius: 8px;
+  border: none;
+  background: var(--button-bg);
+  color: var(--button-color);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+  background: var(--button-hover);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+</style>
+</head>
+<body data-theme="light">
+<h1 data-i18n="title"></h1>
+<p data-i18n="description"></p>
+<button id="open-options" data-i18n="button"></button>
+<script src="popup.js"></script>
+</body>
+</html>

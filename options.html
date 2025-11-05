@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>GPT Side Runner Settings</title>
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f3f4f9;
+  --panel-bg: #ffffff;
+  --card-shadow: 0 2px 6px rgba(25, 32, 56, 0.12);
+  --text: #20243a;
+  --muted: #5a6275;
+  --border: #d6d9e2;
+  --button-primary-bg: linear-gradient(130deg, #4b6cb7, #182848);
+  --button-primary-color: #ffffff;
+  --button-primary-hover: linear-gradient(130deg, #3f5c9c, #121c2f);
+  --button-secondary-bg: rgba(75, 108, 183, 0.12);
+  --button-secondary-border: #4b6cb7;
+  --input-bg: #ffffff;
+}
+
+body[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #111522;
+  --panel-bg: #1b2132;
+  --card-shadow: 0 6px 16px rgba(8, 11, 20, 0.45);
+  --text: #f1f4ff;
+  --muted: #a4acc4;
+  --border: #2b3246;
+  --button-primary-bg: linear-gradient(130deg, #6d8dff, #344a9a);
+  --button-primary-color: #0a0d17;
+  --button-primary-hover: linear-gradient(130deg, #7b9aff, #3d56ac);
+  --button-secondary-bg: rgba(118, 139, 214, 0.18);
+  --button-secondary-border: #7f96f3;
+  --input-bg: #161b29;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 18px 40px;
+}
+
+h1 { font-size: 22px; margin: 0 0 12px; }
+h2 { font-size: 17px; margin: 24px 0 12px; }
+
+.help {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0 0 20px;
+}
+
+.settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 40px;
+  margin-bottom: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.row label {
+  min-width: 120px;
+  font-weight: 600;
+}
+
+.hotkey-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hotkey-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hotkey-row label {
+  min-width: 60px;
+  font-weight: 600;
+}
+
+textarea,
+input[type="text"],
+input[type="number"],
+select {
+  font: inherit;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  background: var(--input-bg);
+  color: inherit;
+}
+
+textarea {
+  width: 100%;
+  min-height: 110px;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+input[type="number"] {
+  width: 96px;
+}
+
+.slots {
+  margin-top: 8px;
+}
+
+.slot {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--card-shadow);
+}
+
+.slot-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.slot-row label {
+  min-width: 72px;
+}
+
+.slot-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.slot-actions button {
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--button-secondary-bg);
+  color: inherit;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.slot-actions button:hover {
+  border-color: var(--button-secondary-border);
+}
+
+.row.dense {
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  align-items: center;
+  margin-top: 24px;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 10px;
+  border: none;
+  padding: 10px 16px;
+  background: var(--button-primary-bg);
+  color: var(--button-primary-color);
+  transition: transform 0.1s ease, filter 0.1s ease, background 0.2s ease;
+  border: 1px solid transparent;
+}
+
+button:hover {
+  background: var(--button-primary-hover);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+button.secondary {
+  background: var(--button-secondary-bg);
+  color: inherit;
+  border: 1px solid var(--button-secondary-border);
+}
+
+.toolbar .hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+#import-file {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .row label { min-width: 100px; }
+  .slot-actions { width: 100%; }
+  .slot-actions button { flex: 1; }
+  button { width: 100%; }
+  .button-group { width: 100%; }
+}
+</style>
+</head>
+<body data-theme="light" data-theme-mode="system">
+<div class="page">
+  <header>
+    <h1 data-i18n="title"></h1>
+    <p class="help" data-i18n="help"></p>
+  </header>
+
+  <section class="settings">
+    <div class="row">
+      <label for="language" data-i18n="languageLabel"></label>
+      <select id="language">
+        <option value="en" data-i18n="langEnglish"></option>
+        <option value="ja" data-i18n="langJapanese"></option>
+      </select>
+    </div>
+    <div class="row">
+      <label for="theme" data-i18n="themeLabel"></label>
+      <select id="theme">
+        <option value="system" data-i18n="themeOptionSystem"></option>
+        <option value="light" data-i18n="themeOptionLight"></option>
+        <option value="dark" data-i18n="themeOptionDark"></option>
+      </select>
+    </div>
+  </section>
+
+  <section class="hotkeys">
+    <h2 data-i18n="hotkeyHeading"></h2>
+    <div class="hotkey-list">
+      <div class="hotkey-row">
+        <label for="hk1" data-i18n="hotkey1Label"></label>
+        <select id="hk1"></select>
+      </div>
+      <div class="hotkey-row">
+        <label for="hk2" data-i18n="hotkey2Label"></label>
+        <select id="hk2"></select>
+      </div>
+      <div class="hotkey-row">
+        <label for="hk3" data-i18n="hotkey3Label"></label>
+        <select id="hk3"></select>
+      </div>
+    </div>
+  </section>
+
+  <section class="slots">
+    <h2 data-i18n="promptSlotsHeading"></h2>
+    <div id="slots"></div>
+  </section>
+
+  <div class="toolbar">
+    <div class="button-group">
+      <button id="add" data-i18n="addSlot"></button>
+      <button id="save" data-i18n="save"></button>
+      <button id="reset" data-i18n="reset"></button>
+    </div>
+    <div class="button-group">
+      <button id="export" class="secondary" data-i18n="export"></button>
+      <button id="import" class="secondary" data-i18n="import"></button>
+      <input type="file" id="import-file" accept="application/json" />
+    </div>
+    <span class="hint" data-i18n="importHint"></span>
+  </div>
+</div>
+
+<script src="options.js"></script>
+</body>
+</html>

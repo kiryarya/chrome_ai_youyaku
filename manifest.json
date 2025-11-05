@@ -1,0 +1,15 @@
+{
+"name": "GPT Side Runner",
+"manifest_version": 3,
+"version": "2.0.0",
+"description": "Run configurable prompts from context menu (unlimited) and map 3 hotkeys to any slots.",
+"permissions": ["storage", "tabs", "windows", "contextMenus"],
+"background": { "service_worker": "bg.js" },
+"options_page": "options.html",
+"action": { "default_title": "GPT Side Runner", "default_popup": "popup.html" },
+"commands": {
+"run-hotkey-1": { "suggested_key": { "default": "Alt+1" }, "description": "Run hotkey slot 1" },
+"run-hotkey-2": { "suggested_key": { "default": "Alt+2" }, "description": "Run hotkey slot 2" },
+"run-hotkey-3": { "suggested_key": { "default": "Alt+3" }, "description": "Run hotkey slot 3" }
+}
+}
