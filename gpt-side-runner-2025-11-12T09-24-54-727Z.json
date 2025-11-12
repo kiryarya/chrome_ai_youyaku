@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "slots": [
+    {
+      "name": "小学生向け要約",
+      "template": "このページを小学生向けにわかりやすくまとめてください。重要なポイントを5つの箇条書きで提示してください。\nURL: {url}\nタイトル: {title}",
+      "widthRatio": 0.33,
+      "heightRatio": 0.95,
+      "position": "right",
+      "service": "chatgpt",
+      "temporary": true
+    },
+    {
+      "name": "要約",
+      "template": "Webページの内容まとめてください。図式化できる内容であれば、mermaid記法で図式化もしてください。\nURL: {url}\nタイトル: {title}",
+      "widthRatio": 0.33,
+      "heightRatio": 0.95,
+      "position": "right",
+      "service": "chatgpt",
+      "temporary": true
+    },
+    {
+      "name": "youtube要約",
+      "template": "この動画を要約して\nURL: {url}\nTitle: {title}",
+      "widthRatio": 0.33,
+      "heightRatio": 0.95,
+      "position": "right",
+      "service": "chatgpt",
+      "temporary": true
+    },
+    {
+      "name": "Twitter用",
+      "template": "Twitter用に文章を公正\n{selection}",
+      "widthRatio": 0.33,
+      "heightRatio": 0.95,
+      "position": "right",
+      "service": "chatgpt",
+      "temporary": true
+    }
+  ],
+  "hotkeyMap": [
+    0,
+    1,
+    2
+  ],
+  "settings": {
+    "language": "ja",
+    "theme": "system"
+  }
+}
