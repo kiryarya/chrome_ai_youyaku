@@ -254,11 +254,22 @@ async function runSlot(index, selectionText = "") {
   const service = SERVICE_DEFINITIONS[serviceId] ?? SERVICE_DEFINITIONS[DEFAULT_SERVICE];
   const chatUrl = service.buildUrl(prompt, { temporary: Boolean(slot.temporary) });
 
-  const current = await chrome.windows.getCurrent();
-  const screenW = current.width ?? 1280;
-  const screenH = current.height ?? 800;
-  const leftBase = current.left ?? 0;
-  const top = current.top ?? 0;
+  let screenW = 1280;
+  let screenH = 800;
+  let leftBase = 0;
+  let top = 0;
+
+  try {
+    const current = await chrome.windows.getCurrent();
+    if (current) {
+      screenW = current.width ?? 1280;
+      screenH = current.height ?? 800;
+      leftBase = current.left ?? 0;
+      top = current.top ?? 0;
+    }
+  } catch (e) {
+    console.warn("Could not get current window, using defaults:", e);
+  }
 
   const w = Math.round(screenW * slot.widthRatio);
   const h = Math.round(screenH * slot.heightRatio);
@@ -279,12 +290,21 @@ async function runSlot(index, selectionText = "") {
 async function rebuildContextMenu() {
   try {
     await chrome.contextMenus.removeAll();
-  } catch {}
+  } catch { }
 
   const slots = await getSlots();
   if (!slots.length) return;
 
-  chrome.contextMenus.create({
+  const create = (props) => {
+    chrome.contextMenus.create(props, () => {
+      const err = chrome.runtime.lastError;
+      if (err) {
+        // Suppress "duplicate id" errors which can happen on reload/restart race conditions
+      }
+    });
+  };
+
+  create({
     id: PARENT_MENU_ID,
     title: "GPT Side Runner",
     contexts: ["all"]
@@ -292,7 +312,7 @@ async function rebuildContextMenu() {
 
   // add all slots to the menu
   slots.forEach((slot, index) => {
-    chrome.contextMenus.create({
+    create({
       id: `slot_${index}`,
       parentId: PARENT_MENU_ID,
       title: slot.name || `Slot ${index + 1}`,
